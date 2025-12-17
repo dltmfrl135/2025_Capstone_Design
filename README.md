@@ -10,7 +10,7 @@ Unity(VR 클라이언트)와 Python(AI 서버) 간의 UDP 소켓 통신을 통�
 ## 2. 폴더 구조
 
 ```
-Health-On-Fit-VR/
+2025_Capstone_Design/
 ├─ Assets/                # Unity 핵심 소스 (Scene, Script, Prefab, Model)
 │  ├─ Scenes/             # 실행 씬 (01_Intro ~ 07_Result)
 │  └─ Scripts/            # 통신, HUD, 판정 로직
