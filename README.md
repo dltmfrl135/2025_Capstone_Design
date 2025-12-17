@@ -1,86 +1,119 @@
-# Health-On-Fit VR (헬스온핏 VR)
+# 🏋️ Health-On-Fit VR (헬스온핏 VR)
+
+AI Vision 기반 실시간 자세 교정 VR 홈트레이닝 시스템입니다.
+Unity(VR 클라이언트)와 Python(AI 서버) 간의 UDP 소켓 통신을 통해 사용자의 스쿼트 동작을 실시간으로 분석하고, 시각·청각적 피드백을 제공합니다.
+
+---
 
 ## 1. 프로젝트 개요
 
-**실시간 자세 교정 VR 홈트레이닝 시스템**입니다.
-Unity(VR 클라이언트)와 Python(AI 서버) 간의 UDP 소켓 통신을 통해
-사용자의 자세를 실시간으로 분석하고 **시각·청각적 피드백**을 제공합니다.
+**Health-On-Fit VR**은 실시간 자세 교정 VR 홈트레이닝 시스템입니다.
+Unity(VR 클라이언트)와 Python(AI 서버) 간의 UDP 소켓 통신을 통해 사용자의 자세를 실시간으로 분석하고 시각·청각적 피드백을 제공합니다.
 
 ---
 
-## 폴더 구조 설명
+## 2. 폴더 구조
 
-* **Assets/**: 프로젝트 핵심 소스코드, 씬(Scene), 프리팹, 모델링 데이터
-
-  * `Assets/Scenes/`: 실행에 필요한 씬 파일 (`StartScene`, `WorkoutScene` 등)
-  * `Assets/Scripts/`: 통신 및 로직 스크립트
-* **Packages/**: Unity 필수 패키지 명세서 (프로젝트 실행 시 자동 설치)
-* **ProjectSettings/**: VR 빌드, 레이어, 태그 설정 파일
-* **Python/**: AI 자세 분석 서버 (`new_final.py`, `requirements.txt`)
-
----
-
-## 2. 필수 실행 환경 (Prerequisites)
-
-**[중요]** 본 프로젝트는 네트워크 통신이 핵심이므로, 아래 환경 버전을 반드시 준수해야 합니다.
-
-* **Unity**: 6000.0.28f1 (버전 불일치 시 스크립트 오류 발생 가능)
-* **Python**: 3.10.11
-* **VR Device**: Meta Quest 3 (Developer Mode 활성화 필수)
-* **Network**: PC와 VR 기기가 동일한 핫스팟 네트워크에 연결되어야 함
+```
+Health-On-Fit-VR/
+├─ Assets/                # Unity 핵심 소스 (Scene, Script, Prefab, Model)
+│  ├─ Scenes/             # 실행 씬 (01_Intro ~ 07_Result)
+│  └─ Scripts/            # 통신, HUD, 판정 로직
+├─ Packages/              # Unity 패키지 설정
+├─ ProjectSettings/       # 빌드, 레이어, 태그 설정
+└─ Python/                # 자세 분석 서버
+   ├─ new_final.py
+   └─ requirements.txt
+```
 
 ---
 
-## 3. 네트워크 및 IP 설정
+## 3. 필수 실행 환경 (Prerequisites)
 
-서로의 IP 주소를 코드에 등록해야 통신이 가능합니다.
-아래 순서를 **정확히 그대로** 따라주세요.
+본 프로젝트는 **네트워크 통신**과 **VR 빌드 환경**이 핵심이므로 아래 조건을 반드시 준수해야 합니다.
 
-### Step 1. 핫스팟 구성 (네트워크 통일)
+* **Unity**: `6000.0.28f1`
 
-1. **인터넷 연결**
-   PC를 iPhone 14(또는 모바일 기기) 핫스팟에 연결하여 인터넷이 가능한 상태로 만듭니다.
-2. **PC 핫스팟 켜기**
-   PC 설정에서 *모바일 핫스팟* 기능을 켭니다. (예: SSID `seul 52@@`)
-3. **Quest 연결**
-   Meta Quest 3의 Wi-Fi 설정에서 PC가 만든 핫스팟(`seul 52@@`)에 연결합니다.
+  * Android Build Support, SDK, JDK 모듈 설치 필수
+* **Python**: `3.10.11`
+* **VR Device**: Meta Quest 3
+
+  * Developer Mode 활성화 필요
+* **Network**: PC와 Quest 3가 동일한 핫스팟 네트워크에 연결되어야 함
+
+---
+
+## 4. 네트워크 및 IP 설정 (중요)
+
+Unity–Python 간 UDP 통신을 위해 **서로의 IP 주소를 정확히 등록**해야 합니다.
+
+### Step 1. 핫스팟 구성
+
+1. **PC 인터넷 연결**
+
+   * 모바일 기기(iPhone 등)의 핫스팟에 PC를 먼저 연결
+2. **PC 모바일 핫스팟 활성화**
+
+   * 예: SSID `seul_52@@`
+3. **Quest 3 연결**
+
+   * Quest 3 → Wi‑Fi 설정 → PC 핫스팟 연결
 4. **Quest IP 확인**
-   Quest → Wi-Fi 상세 정보(고급)에서 **IP 주소 (`192.168.137.xxx`)**를 확인합니다.
+
+   * Quest → Wi‑Fi 상세 정보(고급)
+   * `192.168.137.xxx` 형태의 IP 주소 메모
 
 ---
 
 ### Step 2. IP 주소 교차 등록 (코드 수정)
 
-#### 1️⃣ Python – Quest IP 등록
+#### 1) Python – Quest IP 등록
 
-`Python/new_final.py` 파일의 **22번째 줄**을 수정합니다.
+`Python/new_final.py` 파일 상단부를 수정합니다.
 
 ```python
-# 위 Step 1에서 확인한 Quest 3의 IP 주소
+# Quest 3 IP 주소
 QUEST_IP = "192.168.137.xxx"
+```
+
+#### 2) Unity – PC IP 등록
+
+1. **PC IP 확인**
+
+   * `cmd`실행 → `ipconfig`입력
+   * *무선 LAN 어댑터 연결 **IPv4 주소** 확인
+2. **Unity 설정**
+
+   * `Assets/Scenes/WorkoutScene` 순서대로 열기
+   * `Hierarchy → Workout_HUD_Canvas` 선택
+   * Inspector에서 **PC IP Address** 필드에 IPv4 주소 입력 (각 씬 별 전부 변경)
+
+---
+
+## 5. 빌드 및 실행 방법
+
+### Step 0. Unity 프로젝트 열기
+
+1. Unity Hub 실행 → **Add**
+2. `Assets`, `Packages` 폴더가 포함된 **상위 폴더** 선택
+
+   * ⚠️ `Assets` 폴더 내부를 선택하지 않도록 주의
+3. Editor Version `6000.0.28f1` 확인 후 프로젝트 오픈
+
+---
+
+### Step 1. Python 환경 라이브러리 설정 (최초 1회)
+
+```bash
+pip install -r requirements.txt
 ```
 
 ---
 
-#### 2️⃣ Unity – PC IP 등록
+### Step 2. Unity Android 빌드
 
-1. **PC IP 확인**
-   `cmd` 실행 → `ipconfig` 입력 → *무선 LAN 어댑터*의 IPv4 주소 확인
-
-2. **Unity 설정**
-
-   * `Assets/Scenes/WorkoutScene` 열기
-   * Hierarchy → **Workout_HUD_Canvas** 선택
-   * Inspector → 스크립트 컴포넌트의 **Pc Ip Address** 입력란에 PC IPv4 주소 입력
-
----
-
-## 4. 빌드 및 실행 방법 (How to Run)
-
-### Step 1. Unity 빌드 (Android)
-
-1. Unity → **File → Build Settings**
-2. **Scenes In Build** 목록에 아래 씬이 모두 포함되어 있는지 확인
+1. `File → Build Settings`
+2. **Scenes In Build** 확인
 
 ```
 01_Intro
@@ -92,26 +125,21 @@ QUEST_IP = "192.168.137.xxx"
 07_Result
 ```
 
-* 목록에 없는 경우:
-  `01_Intro` 씬부터 하나씩 열어 **Add Open Scenes**로 전부 추가
-
 3. Platform: **Android**
-4. Quest 3를 PC에 연결한 상태에서 **Build And Run** 클릭
-
-빌드 완료 후 Quest 3에서 앱이 자동 실행됩니다.
+4. Quest 3 연결 후 **Build And Run** 클릭
+(빌드가 완료되면 Quest 3에서 앱이 자동 실행됩니다.)
 
 ---
 
-### Step 2. Python 서버 실행
+### Step 3. Python 서버 실행
 
-Unity 빌드가 진행되는 동안 Python 폴더로 이동합니다.
+Unity 빌드가 진행되는 동안 Python 폴더에서 서버를 실행하여 대기합니다.
 
 ```bash
-pip install -r requirements.txt
 python new_final.py
 ```
 
-터미널에 아래 메시지가 출력되면 준비 완료입니다.
+터미널에 다음 메시지가 출력되면 준비 완료입니다.
 
 ```
 📡 PC 대기 중...
@@ -119,25 +147,28 @@ python new_final.py
 
 ---
 
-### Step 3. VR 시작
+### Step 4. VR 시작
 
-1. Quest 3에서 앱 실행
-2. 메인 화면에서 **조이스틱을 이용해 패널 앞 발판 위에 서면 자동 START**
+* Quest 3에서 앱 자동 실행 확인
+* 메인 화면에서 조이스틱 이동 → 패널 앞 발판 위에 서면 자동 시작
+* 오작동 방지를 위해 씬 로드 후 약 2초 뒤부터 발판이 인식됩니다.
 
 ---
 
-## 5. 트러블슈팅 (FAQ)
+## 6. 트러블슈팅 (FAQ)
 
-**Q. 앱은 켜지는데 게임이 진행되지 않습니다.**
-A. IP 주소 설정 오류 또는 방화벽 문제일 가능성이 매우 높습니다.
+### Q. 앱은 실행되지만 운동이 시작되지 않습니다.
 
-* `new_final.py`에 입력한 Quest IP 재확인
-* Unity에 입력한 PC IP 재확인
+* Python 코드에 입력한 **Quest IP** 확인
+* Unity Inspector에 입력한 **PC IP** 확인
 * PC 방화벽에서 Python 통신 허용 여부 확인
-* Quest가 PC 핫스팟에 정상 연결되어 있는지 확인
 
 ---
 
-**Q. Unity에서 패키지 에러가 발생합니다.**
-A. 프로젝트 최초 실행 시 패키지 다운로드(Resolving Packages)가 진행 중일 수 있습니다.
-인터넷 연결을 유지한 상태로 잠시 기다려 주세요.
+### Q. Unity 패키지 오류가 발생합니다.
+
+* 최초 실행 시 패키지 자동 다운로드 중일 수 있습니다.
+* 인터넷 연결을 유지한 채 잠시 대기하세요.
+
+
+
