@@ -100,7 +100,7 @@ QUEST_IP = "192.168.137.xxx"
   `cmd` 실행 → `ipconfig` 입력 → 무선 LAN 어댑터 로컬 영역 연결의 **IPv4 주소** 확인
 * **Unity 설정**
 
-  * `Assets/Scenes/` 폴더 내의 **모든 씬(01_Intro ~ 07_Result)**에 대해 아래 작업을 반복하거나, 프리팹을 수정하여 적용합니다.
+  * `Assets/Scenes/` 폴더 내의 모든 씬(01_Intro ~ 07_Result)에 대해 아래 작업을 반복하거나, 프리팹을 수정하여 적용합니다.
   * Hierarchy → `Workout_HUD_Canvas` (또는 통신 매니저) 선택
   * Inspector → Script 컴포넌트의 **PC IP Address** 필드에 위에서 확인한 PC IP 입력
 
