@@ -38,6 +38,30 @@ Unity(VR 클라이언트)와 Python(AI 서버) 간의 UDP 소켓 통신을 통�
 
 ---
 
+
+---
+
+## 5. 빌드 및 실행 방법
+
+### Step 0. Unity 프로젝트 열기
+
+1. Unity Hub 실행 → **Add disk**
+2. `Assets`, `Packages` 폴더가 포함된 **상위 폴더** 선택
+
+   * ⚠️ `Assets` 폴더 내부를 선택하지 않도록 주의, 업로드 용으로 폴더 안에 폴더를 넣었음 
+3. Editor Version `6000.0.28f1` 확인 후 프로젝트 오픈
+
+---
+
+### Step 1. Python 환경 라이브러리 설정 (최초 1회)
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+
 ## 4. 네트워크 및 IP 설정 (중요)
 
 Unity–Python 간 UDP 통신을 위해 **서로의 IP 주소를 정확히 등록**해야 합니다.
@@ -82,28 +106,8 @@ QUEST_IP = "192.168.137.xxx"
    * `Assets/Scenes/WorkoutScene` 순서대로 열기
    * `Hierarchy → Workout_HUD_Canvas` 선택
    * Inspector에서 **PC IP Address** 필드에 IPv4 주소 입력 (각 씬 별 전부 변경)
-
----
-
-## 5. 빌드 및 실행 방법
-
-### Step 0. Unity 프로젝트 열기
-
-1. Unity Hub 실행 → **Add disk**
-2. `Assets`, `Packages` 폴더가 포함된 **상위 폴더** 선택
-
-   * ⚠️ `Assets` 폴더 내부를 선택하지 않도록 주의, 업로드 용으로 폴더 안에 폴더를 넣었음 
-3. Editor Version `6000.0.28f1` 확인 후 프로젝트 오픈
-
----
-
-### Step 1. Python 환경 라이브러리 설정 (최초 1회)
-
-```bash
-pip install -r requirements.txt
-```
-
----
+  
+   
 
 ### Step 2. Unity Android 빌드
 
